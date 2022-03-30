@@ -31,5 +31,4 @@ public class HomeController {
         modelAndView.setViewName("/users/create");
         return modelAndView;
     }
-
 }

@@ -4,12 +4,13 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!--    <script src="/resources/js/jquery-3.6.0.js"></script>-->
-    <!--    <script src="/resources/js/jquery.validate.js"></script>-->
+    <link href="/resources/css/style-avatar.css" rel="stylesheet"/>
     <th:block th:replace="/layout/linkAndScriptDip :: linkAndScriptDip"/>
+
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
+
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
        id="sidenav-main">
     <th:block th:replace="/layout/navbarLeft :: navbarLeft"/>
@@ -38,7 +39,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="emailCreate" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="emailCreate"th:field="*{email}">
+                                <input type="email" class="form-control" id="emailCreate" th:field="*{email}">
                             </div>
                         </div>
                         <div class="row">
@@ -62,15 +63,17 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 preview">
                                 <label for="avatarCreate" class="form-label">Avatar</label>
-                                <input type="file" class="form-control" name="avatarCreate"
+                                <input  type="file" class="form-control view-avatar" name="avatarCreate"
                                        id="avatarCreate" th:field="*{avatar}">
-                                <div class="preview"></div>
+                                <img id="img-preview" class="img-preview"
+                                     src="/resources/image/22-223863_no-avatar-png-circle-transparent-png.jpg"/>
                             </div>
                         </div>
+
                         <div class="modal-footer">
-                            <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" id="btnCreate" class="btn btn-outline-success">Create</button>
                         </div>
                     </form>
@@ -90,31 +93,35 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="frmEdit">
+                    <form id="frmEdit" th:action="@{/users/edit}" th:object="${userForm}"
+                          method="POST" novalidate="novalidate" enctype="multipart/form-data">
+                        <div class="col-md-6 mb-3">
+                            <input type="hidden" class="form-control" id="idEdit" th:field="*{id}">
+                        </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="fullNameEdit" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="fullNameEdit">
+                                <input type="text" class="form-control" id="fullNameEdit" th:field="*{fullName}">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="emailEdit" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="emailEdit">
+                                <input type="email" class="form-control" id="emailEdit" th:field="*{email}">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="usernameEdit" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="usernameEdit">
+                                <input type="text" class="form-control" id="usernameEdit" th:field="*{username}">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="phoneEdit" class="form-label">Phone</label>
-                                <input type="tel" class="form-control" id="phoneEdit">
+                                <input type="tel" class="form-control" id="phoneEdit" th:field="*{phone}">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="passwordEdit" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="passwordEdit">
+                                <input type="password" class="form-control" id="passwordEdit" th:field="*{password}">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="confirmPasswordEdit" class="form-label">Confirm Password</label>
@@ -122,21 +129,24 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-6 mb-3 preview">
                                 <label for="avatarEdit" class="form-label">Avatar</label>
-                                <input type="file" class="form-control" id="avatarEdit">
+                                <input type="file" class="form-control view-avatar" id="avatarEdit"
+                                       th:field="*{avatar}">
+                                <img class="img-preview" id="imgAvatarEdit" src="">
                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" id="btnEdit" class="btn btn-outline-success">Edit</button>
                         </div>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="btnEdit" class="btn btn-outline-success">Edit</button>
-                </div>
+
             </div>
         </div>
     </div>
-
+<!--List-->
     <div class="container-fluid py-4">
         <button type="button" id="btn-create" class="btn btn-outline-primary mb-3 btn-create">Create Admin</button>
         <div class="row">
@@ -150,6 +160,8 @@
                             <table class="table align-items-center mb-0">
                                 <thead>
                                 <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">STT
+                                    </th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID
                                     </th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
@@ -173,12 +185,15 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <th:block th:each="item : ${users}">
+                                <th:block th:each="item,loopState : ${users}">
                                     <tr>
+                                        <td>
+                                            <p class="text-xs font-weight-bold mb-0" th:text="${loopState.count}"></p>
+                                        </td>
                                         <td>
                                             <div class="d-flex px-2 py-1">
                                                 <div>
-<!--                                                    th:src="@{https://i.pravatar.cc/300?img={id}(id=${item.id})}-->
+                                                    <!--                                                    th:src="@{https://i.pravatar.cc/300?img={id}(id=${item.id})}-->
                                                     <img th:src="@{'/resources/image/' + ${item.avatar}}"
                                                          class="avatar avatar-sm me-3"
                                                          alt="user1">
@@ -210,8 +225,8 @@
                                             <span class="badge badge-sm bg-gradient-secondary">Offline</span>
                                         </td>
                                         <td class="align-middle">
-                                            <button type="button" class="btn btn-outline-secondary btn-edit"
-                                                    th:data-id="${item.id}">Edit
+                                            <button type="button" class="btn btn-outline-secondary btn-edit" th:data-id="${item.id}">
+                                                <a>Edit</a>
                                             </button>
                                         </td>
                                         <td>
@@ -238,32 +253,23 @@
 <!--   Core JS Files   -->
 <th:block th:replace="/layout/scirptEnd :: scriptEnd"/>
 
+<!--view-avatar-->
+<script>
+    $(".view-avatar").change(function () {
+        const src = URL.createObjectURL(this.files[0]);
+        this.parentElement.getElementsByClassName('img-preview')[0].src = src;
+    })
+
+
+</script>
+
 <script>
     let user = new User();
     $("#createModal").on("hidden.bs.modal", function () {
         $("#frmCreate").validate().resetForm();
         $("#frmCreate").get(0).reset();
     })
-    // $("#btnCreate").on("click", function () {
-    //     user.fullName = $("#fullNameCreate").val();
-    //     user.email = $("#emailCreate").val();
-    //     user.phone = $("#phoneCreate").val();
-    //     user.username = $("#usernameCreate").val();
-    //     user.password = $("#passwordCreate").val();
-    //     user.avatar = $("#avatarCreate").val();
-    //     doCreateUser(user);
-    //
-    // });
-    $("#btnEdit").on("click", function () {
-        user.fullName = $("#fullNameEdit").val();
-        user.email = $("#emailEdit").val();
-        user.phone = $("#phoneEdit").val();
-        user.username = $("#usernameEdit").val();
-        user.password = $("#passwordEdit").val();
-        user.avatar = $("#avatarEdit").val();
-        doEditUser(user);
 
-    });
 
     function showCreateModal() {
         $(".btn-create").on("click", function () {
@@ -277,14 +283,15 @@
             let id = $(this).data("id");
             getCustomerById(id).then(function () {
                 $("#editModal").modal("show");
+                $("#idEdit").val(user.id);
                 $("#fullNameEdit").val(user.fullName);
                 $("#emailEdit").val(user.email);
                 $("#phoneEdit").val(user.phone);
                 $("#usernameEdit").val(user.username);
                 $("#passwordEdit").val(user.password);
                 $("#confirmPasswordEdit").val(user.password);
-                $("#avatarEdit").val(user.avatar);
-
+                // console.log('/resources/image/' + user.avatar);
+                $("#imgAvatarEdit").attr("src",'/resources/image/' + user.avatar);
             })
 
         });
@@ -309,44 +316,6 @@
         });
     }
 
-
-    function doCreateUser(user) {
-        $.ajax({
-            type: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            url: "http://localhost:8080/api/users/create-admin",
-            data: JSON.stringify(user)
-        }).done(function (data) {
-            user = data;
-            showSuccess('Create Admin successfully')
-            $("#createModal").modal("hide");
-            $("#frmCreate")[0].reset();
-        }).fail(function (data) {
-            showError("Create Admin Fail")
-        })
-    }
-
-    function doEditUser(user) {
-        $.ajax({
-            type: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            url: "http://localhost:8080/api/users/" + user.id,
-            data: JSON.stringify(user)
-        }).done(function (data) {
-            user = data;
-
-            $("#editModal").modal('hide');
-            showSuccess('Update Customer Success')
-        }).fail(function () {
-            showError('Error')
-        })
-    }
 
     function doDelete(userId) {
         $.ajax({

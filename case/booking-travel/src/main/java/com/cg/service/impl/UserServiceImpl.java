@@ -11,6 +11,10 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+    public UserServiceImpl() {
+
+    }
+
     @Autowired
     private UserRepository userRepository;
 
@@ -49,4 +53,16 @@ public class UserServiceImpl implements UserService {
     public List<User> fillAllActive() {
         return userRepository.findAllByDeletedIsFalse();
     }
+
+    @Override
+    public boolean existsByUsernameAndPassword(String username,String password) {
+        return userRepository.existsByUsernameAndPassword(username,password);
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+
 }

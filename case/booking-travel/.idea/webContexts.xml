@@ -6,6 +6,7 @@
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customers/home.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customers" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customers/registration.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/customers" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/index.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/tours/list.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/tours" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/users/list.html" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/users" />
       </map>
     </option>

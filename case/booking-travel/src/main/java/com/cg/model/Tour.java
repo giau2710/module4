@@ -3,9 +3,10 @@ package com.cg.model;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Entity
-
+@Table(name = "tour")
 public class Tour {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,10 +15,10 @@ public class Tour {
     private String name;
 
     @Column(name = "start_day")
-    private Date startDay ;
+    private Date startDay;
 
     @Column(name = "end_day")
-    private Date endDay ;
+    private Date endDay;
 
     private String departure;
 
@@ -26,6 +27,8 @@ public class Tour {
     private BigDecimal price;
 
     private String details;
+
+//    private MutiP;
 
     private boolean deleted;
 

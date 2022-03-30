@@ -207,7 +207,7 @@ public class AppConfig implements WebMvcConfigurer, ApplicationContextAware {
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver getResolver() throws IOException {
         CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-        resolver.setMaxUploadSizePerFile(52428800);
+        resolver.setMaxUploadSizePerFile(20000);
         return resolver;
     }
 

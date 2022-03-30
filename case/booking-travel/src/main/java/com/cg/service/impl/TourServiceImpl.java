@@ -47,7 +47,12 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<Tour> fillAllActive() {
+    public List<Tour> findAllActive() {
         return tourRepository.findAllByDeletedIsFalse();
+    }
+
+    @Override
+    public Tour getTourAddNew() {
+        return tourRepository.getTourAddNew();
     }
 }
