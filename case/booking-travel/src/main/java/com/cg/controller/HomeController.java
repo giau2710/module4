@@ -11,8 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/")
 public class HomeController {
 
-
-
     @GetMapping()
     public ModelAndView showHome() {
         ModelAndView modelAndView = new ModelAndView();

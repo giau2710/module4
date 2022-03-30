@@ -1,0 +1,64 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div th:block th:fragment="modal_create">
+    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal Create</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="frmCreate" th:action="@{/admins/save}" th:object="${userForm}"
+                          method="POST" novalidate="novalidate" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="fullNameCreate" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullNameCreate" th:field="*{fullName}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="emailCreate" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="emailCreate" th:field="*{email}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="usernameCreate" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="usernameCreate" th:field="*{username}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="phoneCreate" class="form-label">Phone</label>
+                                <input type="tel" class="form-control" id="phoneCreate" th:field="*{phone}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="passwordCreate" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="passwordCreate" th:field="*{password}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="confirmPasswordCreate" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" id="confirmPasswordCreate">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3 preview">
+                                <label for="avatarCreate" class="form-label">Avatar</label>
+                                <input  type="file" class="form-control view-avatar" name="avatarCreate"
+                                        id="avatarCreate" th:field="*{avatar}">
+                                <img id="img-preview" class="img-preview"
+                                     src="/resources/image/22-223863_no-avatar-png-circle-transparent-png.jpg"/>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" id="btnCreate" class="btn btn-outline-success">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

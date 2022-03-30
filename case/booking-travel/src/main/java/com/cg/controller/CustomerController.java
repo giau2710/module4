@@ -20,7 +20,7 @@ public class CustomerController {
     @GetMapping("/home")
     public ModelAndView showHome() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/customers/home");
+        modelAndView.setViewName("/users/customers/home");
         return modelAndView;
     }
 
@@ -28,7 +28,7 @@ public class CustomerController {
     public ModelAndView showFormRegistration() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user",new User());
-        modelAndView.setViewName("/customers/registration");
+        modelAndView.setViewName("/users/customers/registration");
         return modelAndView;
     }
 

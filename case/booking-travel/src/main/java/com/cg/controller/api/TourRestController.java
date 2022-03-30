@@ -48,7 +48,7 @@ public class TourRestController {
     }
 
 
-    @PostMapping("/save-tour")
+    @PostMapping("/save")
     public ResponseEntity<Object> saveTour(TourForm tourForm)
             throws IOException {
         Tour tour = new Tour(0L, tourForm.getName(), tourForm.getStartDay(), tourForm.getEndDay(), tourForm.getDeparture(), tourForm.getDestination(), tourForm.getPrice(), tourForm.getDetails(), false);

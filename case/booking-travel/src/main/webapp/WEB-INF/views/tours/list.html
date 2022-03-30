@@ -217,7 +217,7 @@
         form_data.append('price', Number($("#priceCreate").val()));
         form_data.append('details', $("#detailsCreate").val());
         $.ajax({
-            url: '/api/tours/save-tour',
+            url: '/api/tours/save',
             dataType: 'text',
             cache: false,
             contentType: false,
