@@ -1,6 +1,6 @@
 package com.cg.model;
 
-import com.cg.model.dto.UserDTO;
+import com.cg.model.dto.TourDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -48,6 +48,31 @@ public class Tour {
 
     private boolean deleted;
 
+    public TourDTO toTourDTO(){
+        return new TourDTO()
+                .setId(id)
+                .setName(name)
+                .setStartDay(startDay)
+                .setEndDay(endDay)
+                .setDeparture(departure)
+                .setDestination(destination)
+                .setPrice(price)
+                .setDetails(details);
+    }
 
-
+    @Override
+    public String toString() {
+        return "Tour{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", startDay=" + startDay +
+                ", endDay=" + endDay +
+                ", departure='" + departure + '\'' +
+                ", destination='" + destination + '\'' +
+                ", price=" + price +
+                ", details='" + details + '\'' +
+                ", imageTours=" + imageTours +
+                ", deleted=" + deleted +
+                '}';
+    }
 }

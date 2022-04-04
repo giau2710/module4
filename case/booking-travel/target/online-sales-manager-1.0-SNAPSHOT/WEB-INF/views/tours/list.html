@@ -58,7 +58,7 @@
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-0">
-                            <table class="table align-items-center table-hover mb-0">
+                            <table th:id="tbCustomer" class="table align-items-center table-hover mb-0">
                                 <thead>
                                 <tr>
                                     <th class="text-uppercase text-secondary text-xxs ps-2">ID
@@ -90,7 +90,7 @@
                                 </thead>
                                 <tbody>
                                 <th:block th:each="item : ${tours}">
-                                    <tr>
+                                    <tr th:id="'tr_'+ ${item.id}">
                                         <td>
                                             <p class="text-xs font-weight-bold mb-0" th:text="${item.id}"></p>
                                         </td>
@@ -101,13 +101,11 @@
                                             <p class="text-xs font-weight-bold mb-0" th:text="${item.price}"></p>
                                         </td>
                                         <td>
-                                            <p class="text-xs font-weight-bold mb-0" th:text="${item.startDay}"></p>
+                                            <p class="text-xs font-weight-bold mb-0"
+                                               onchange="longToDate(${item.startDay})" th:text="${item.startDay}"></p>
                                         </td>
                                         <td>
                                             <p class="text-xs font-weight-bold mb-0" th:text="${item.endDay}"></p>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0" th:text="${item.departure}"></p>
                                         </td>
                                         <td>
                                             <p class="text-xs font-weight-bold mb-0" th:text="${item.destination}"></p>
@@ -122,11 +120,6 @@
                                                     th:data-id="${item.id}">Delete
                                             </button>
                                         </td>
-                                        <!--                                        <td>-->
-                                        <!--                                            <button type="button" class="btn btn-outline-info btn-add-img"-->
-                                        <!--                                                    th:data-id="${item.id}">Add Image-->
-                                        <!--                                            </button>-->
-                                        <!--                                        </td>-->
 
                                     </tr>
                                 </th:block>
@@ -137,6 +130,11 @@
                 </div>
             </div>
         </div>
+<!--        <div>-->
+<!--            <a th:href="@{'/tours'(page=${tours.number - 1})}" th:if="${tours.hasPrevious()}">Previous</a>-->
+<!--            <span th:text="${tours.number + 1}"></span>/<span th:text="${tours.totalPages}"></span>-->
+<!--            <a th:href="@{'/tours'(page=${tours.number + 1})}" th:if="${tours.hasNext()}">Next</a>-->
+<!--        </div>-->
         <th:block th:replace="/layout/footer :: footer"/>
     </div>
 
@@ -146,7 +144,9 @@
 <th:block th:replace="/layout/scirptEnd :: scriptEnd"/>
 
 <!--Upload file-->
-<script type="text/javascript">
+<script>
+
+
     var size;
     $('.dandev_insert_attach').click(function () {
         if ($('.list_attach').hasClass('show-btn') === false) {
@@ -155,7 +155,6 @@
         var _lastimg = jQuery('.dandev_attach_view li').last().find('input[type="file"]').val();
         // var test_size=jQuery('.dandev_attach_view li').last().find('input[type="file"]').val();
         // console.log("test_size"+ test_size)
-
         if (_lastimg != '') {
             var d = new Date();
             var _time = d.getTime();
@@ -170,8 +169,8 @@
             _html += '</li>';
             jQuery('.dandev_attach_view').append(_html);
             jQuery('.dandev_attach_view li').last().find('input[type="file"]').click();
-            size = $('ul.dandev_attach_view').children('li').length;
-            console.log("test_size " + size);
+            // size = $('ul.dandev_attach_view').children('li').length;
+            // console.log("test_size " + size);
         } else {
             if (_lastimg == '') {
                 jQuery('.dandev_attach_view li').last().find('input[type="file"]').click();
@@ -205,10 +204,14 @@
 
     }
 
+    function DelImg(el) {
+        jQuery(el).closest('li').remove();
+    }
+
     $("#btnCreate").on("click", function () {
         var form_data = new FormData();
         //thêm files vào trong form data
-        form_data.append('avatar', file_data);
+        form_data.append('image', file_data);
         form_data.append('name', $("#nameCreate").val());
         form_data.append('startDay', new Date($("#startDayCreate").val()));
         form_data.append('endDay', new Date($("#endDayCreate").val()));
@@ -218,71 +221,112 @@
         form_data.append('details', $("#detailsCreate").val());
         $.ajax({
             url: '/api/tours/save',
-            dataType: 'text',
+            // dataType: 'text',
             cache: false,
             contentType: false,
             processData: false,
             data: form_data,
-            type: 'post',
-            success: function (data) {
-                showSuccess(data);
+            type: 'post'
+        }).done(function (data) {
+            $("#createModal").modal("hide");
+            tourDTO = data;
+            let resultStarDay = longToDate(tourDTO.startDay);
+            let resultEndDay = longToDate(tourDTO.startDay);
+            showSuccess('Create tour successfully')
+            let str = `
+                    <tr id="tr_${tourDTO.id}">
+                        <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tourDTO.id}</p>
+                        </td>
+                        <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tourDTO.name}</p>
+                        </td>
+                         <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tourDTO.price}</p>
+                        </td>
+                         <td>
+                            <p class="text-xs font-weight-bold mb-0" >${resultStarDay}</p>
+                        </td>
+                         <td>
+                            <p class="text-xs font-weight-bold mb-0" >${resultEndDay}</p>
+                        </td>
+                         <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tourDTO.departure}</p>
+                        </td>
+                         <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tourDTO.destination}</p>
+                        </td>
+                        <td class="align-middle">
+                            <button type="button" class="btn btn-outline-secondary btn-edit"
+                                                    data-id="${tourDTO.id}">Edit
+                            </button>
+                        </td>
+                        <td>
+                             <button type="button" class="btn btn-outline-danger btn-delete"
+                                                    data-id="${tourDTO.id}">Delete
+                             </button>
+                        </td>
+                    </tr>
+                    `;
+            $("#tbCustomer tbody").prepend(str);
+            $("#frmCreate").get(0).reset();
+            showEditModal();
+            showDeleteModal();
+        }).fail(function (jqXHR) {
+            // showError("Add tour error");
+            let str = ``;
+            if (jqXHR.responseJSON) {
+                if (jqXHR.responseJSON.message) {
+                    str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</lable><br>`;
+                } else {
+                    $.each(jqXHR.responseJSON, function (key, value) {
+                        str += `<label id="${key}Create-error" class="error" for="${key}Create">${value}</lable><br>`;
+                        $("#" + key + "Create").addClass("error");
+                    });
+                }
+            } else {
+                str += `<label id= "message-error" class= "error" for= "message">${App.ERROR_400}</label>`;
             }
-        });
+            $("#createModal .modal-alert-danger").removeClass('hide').addClass('show').html(str);
+        })
     })
 
-    // $("#btnEdit").on("click", function () {
-    //     var form_data = new FormData();
-    //     //thêm files vào trong form data
-    //     form_data.append('id', tour.id);
-    //     form_data.append('avatar', file_data);
-    //     form_data.append('name', $("#nameEdit").val());
-    //     form_data.append('startDay', new Date($("#startDayEdit").val()));
-    //     form_data.append('endDay', new Date($("#endDayEdit").val()));
-    //     form_data.append('departure', $("#departureEdit").val());
-    //     form_data.append('destination', $("#destinationEdit").val());
-    //     form_data.append('price', Number($("#priceEdit").val()));
-    //     form_data.append('details', $("#detailsEdit").val());
-    //     $.ajax({
-    //         url: '/api/tours/edit',
-    //         dataType: 'text',
-    //         cache: false,
-    //         contentType: false,
-    //         processData: false,
-    //         data: form_data,
-    //         type: 'put',
-    //         success: function (data) {
-    //             showSuccess(data);
-    //         }
-    //     });
-    // })
 
-    function DelImg(el) {
-        jQuery(el).closest('li').remove();
-
-    }
 </script>
 
-<!--List function-->
+
 <script>
+    let page = {
+        url: {
+            getAllTours: App.BASE_URL_TOURS,
+            getTourById: App.BASE_URL_TOURS,
+            doDelete: App.BASE_URL_TOURS,
+        }
+    }
+
     let user = new User();
     let tour = new Tour();
+    let tourDTO = new TourDTO();
+
+
     $("#createModal").on("hidden.bs.modal", function () {
         $("#frmCreate").validate().resetForm();
         $("#frmCreate").get(0).reset();
+
+        $("#createModal input").removeClass('error');
+        $("#createModal .modal-alert-danger").removeClass('show').addClass('hide').empty();
+
+
     })
 
-    // $("#btnCreate").on("click", function () {
-    //     tour.name = $("#nameCreate").val();
-    //     tour.departure = $("#departureCreate").val();
-    //     tour.destination = $("#destinationCreate").val();
-    //     tour.startDay = $("#startDayCreate").val();
-    //     tour.endDay = $("#endDayCreate").val();
-    //     tour.price = $("#priceCreate").val();
-    //     tour.details = $("#detailsCreate").val();
-    //     // tour.avatar = $("#avatarCreate").val();
-    //     doCreateTour(tour);
-    //
-    // });
+    $("#editModal").on("hidden.bs.modal", function () {
+        $("#frmEdit").validate().resetForm();
+        $("#frmEdit").get(0).reset();
+
+        $("#editModal input").removeClass('error');
+        $("#editModal .modal-alert-danger").removeClass('show').addClass('hide').empty();
+    })
+
     $("#btnEdit").on("click", function () {
         tour.name = $("#nameEdit").val();
         tour.departure = $("#departureEdit").val();
@@ -291,7 +335,7 @@
         tour.endDay = $("#endDayEdit").val();
         tour.price = $("#priceEdit").val();
         tour.details = $("#detailsEdit").val();
-        doEditTour(tour);
+        $("#frmEdit").submit();
 
     });
 
@@ -306,11 +350,15 @@
         $(".btn-edit").on("click", function () {
             let id = $(this).data("id");
             getTourById(id).then(function () {
+
+                const resultStarDay = longToDate(tour.startDay);
+                const resultEndDay = longToDate(tour.endDay);
+
                 $("#editModal").modal("show");
                 $("#nameEdit").val(tour.name);
                 $("#priceEdit").val(tour.price);
-                $("#startDayEdit").val(tour.startDay);
-                $("#endDayEdit").val(tour.endDay);
+                $("#startDayEdit").val(resultStarDay);
+                $("#endDayEdit").val(resultEndDay);
                 $("#departureEdit").val(tour.departure);
                 $("#destinationEdit").val(tour.destination);
                 $("#detailsEdit").val(tour.details);
@@ -354,7 +402,7 @@
             $("#createModal").modal("hide");
             $("#frmCreate")[0].reset();
         }).fail(function (data) {
-            showError("Create Admin Fail")
+            showError("Create Tour Fail")
         })
     }
 
@@ -368,21 +416,76 @@
             url: "http://localhost:8080/api/tours/" + tour.id,
             data: JSON.stringify(tour)
         }).done(function (data) {
-            tour = data;
             $("#editModal").modal('hide');
+            tourDTO = data;
+            let resultStarDay = longToDate(tourDTO.startDay);
+            let resultEndDay = longToDate(tourDTO.startDay);
+            let str = `
+                    <tr id="tr_${tourDTO.id}">
+                        <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tourDTO.id}</p>
+                        </td>
+                        <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tourDTO.name}</p>
+                        </td>
+                         <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tourDTO.price}</p>
+                        </td>
+                         <td>
+                            <p class="text-xs font-weight-bold mb-0" >${resultStarDay}</p>
+                        </td>
+                         <td>
+                            <p class="text-xs font-weight-bold mb-0" >${resultEndDay}</p>
+                        </td>
+                         <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tourDTO.departure}</p>
+                        </td>
+                         <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tourDTO.destination}</p>
+                        </td>
+                        <td class="align-middle">
+                            <button type="button" class="btn btn-outline-secondary btn-edit"
+                                                    data-id="${tourDTO.id}">Edit
+                            </button>
+                        </td>
+                        <td>
+                             <button type="button" class="btn btn-outline-danger btn-delete"
+                                                    data-id="${tourDTO.id}">Delete
+                             </button>
+                        </td>
+                    </tr>
+                    `;
+            let currentRow = $("#tr_" + data.id);
+            currentRow.replaceWith(str);
+            showEditModal();
+            showDeleteModal();
             showSuccess('Update Tour Success')
-        }).fail(function () {
-            showError('Error')
+        }).fail(function (jqXHR) {
+            // showError('Error')
+            let str = ``;
+            if (jqXHR.responseJSON) {
+                if (jqXHR.responseJSON.message) {
+                    str += `<label id="message-error" class="error" for="message">${jqXHR.responseJSON.message}</lable><br>`;
+                } else {
+                    $.each(jqXHR.responseJSON, function (key, value) {
+                        str += `<label id="${key}Edit-error" class="error" for="${key}Edit">${value}</lable><br>`;
+                        $("#" + key + "Edit").addClass("error");
+                    });
+                }
+            } else {
+                str += `<label id= "message-error" class= "error" for= "message">${App.ERROR_400}</label>`;
+            }
+            $("#editModal .modal-alert-danger").removeClass('hide').addClass('show').html(str);
         })
     }
 
     function doDelete(tourId) {
         $.ajax({
             type: "DELETE",
-            url: "http://localhost:8080/api/tours/" + tourId,
-        }).done(function () {
-            showSuccess('Tour has been deleted');
-            // getAllCustomer();
+            url: page.url.doDelete + "/" + tourId,
+        }).done(function (data) {
+            showSuccess(data);
+            $("#tr_" + tourId).remove();
         }).fail(function () {
             showError('Tour\'s information is invalid');
 
@@ -392,12 +495,12 @@
 
     function getTourById(tourId) {
         return $.ajax({
-            type: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
-            url: "http://localhost:8080/api/tours/" + tourId,
+            type: "GET",
+            url: page.url.getTourById + "/" + tourId,
         }).done(function (data) {
             tour = data;
         }).fail(function () {
@@ -405,9 +508,155 @@
         })
     }
 
+    function drawCustomer(data) {
+        console.log(data);
+        $("#tbCustomer tbody").html('');
+        data.forEach(item => {
+            tour = item;
+            let resultStarDay = longToDate(tour.startDay);
+            let resultEndDay = longToDate(tour.startDay);
+            let str = `
+                    <tr id="tr_${tour.id}">
+                        <td>
+                            <p class="text-xs font-weight-bold mb-0"" >${tour.id}</p>
+                        </td>
+                        <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tour.name}</p>
+                        </td>
+                         <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tour.price}</p>
+                        </td>
+                         <td>
+                            <p type="date" class="text-xs font-weight-bold mb-0">${resultStarDay}</p>
+                        </td>
+                         <td>
+                            <p type="date" class="text-xs font-weight-bold mb-0" >${resultEndDay}</p>
+                        </td>
+                         <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tour.departure}</p>
+                        </td>
+                         <td>
+                            <p class="text-xs font-weight-bold mb-0" >${tour.destination}</p>
+                        </td>
+                        <td class="align-middle">
+                            <button type="button" class="btn btn-outline-secondary btn-edit"
+                                                    data-id="${tour.id}">Edit
+                            </button>
+                        </td>
+                        <td>
+                             <button type="button" class="btn btn-outline-danger btn-delete"
+                                                    data-id="${tour.id}">Delete
+                             </button>
+                        </td>
+                    </tr>
+                    `;
+
+            $("#tbCustomer tbody").prepend(str);
+        });
+        showCreateModal();
+        showEditModal();
+        showDeleteModal();
+    }
+
+    function getAllTours() {
+        $.ajax({
+            type: "GET",
+            url: page.url.getAllTours
+        }).done(function (data) {
+            drawCustomer(data);
+
+        }).fail(function () {
+            showError('Error')
+        })
+    }
+
+    getAllTours();
     showCreateModal();
     showEditModal();
     showDeleteModal();
+
+    $("#frmEdit").validate({
+        rules: {
+            nameEdit: {
+                required: true,
+                maxlength: 50,
+                minlength: 2,
+            },
+            priceEdit: {
+                required: true,
+                min: 100000,
+            },
+            departureEdit: {
+                required: true,
+                maxlength: 50,
+                minlength: 2,
+            },
+            destinationEdit: {
+                required: true,
+                maxlength: 50,
+                minlength: 2,
+            },
+            detailsEdit: {
+                required: true,
+                minlength: 2,
+            },
+
+        },
+        messages: {
+            nameEdit: {
+                required: "Name value is required",
+                maxlength: "Name must be between 2 and 50 characters",
+                minlength: "Name must be between 2 and 50 characters",
+            },
+            priceEdit: {
+                required: "Price value is required",
+                min: "Price min value is 100.000"
+            },
+            departureEdit: {
+                required: "Departure value is required",
+                maxlength: "Departure must be between 2 and 50 characters",
+                minlength: "Departure must be between 2 and 50 characters",
+            },
+            destinationEdit: {
+                required: "Destination value is required",
+                maxlength: "Destination must be between 2 and 50 characters",
+                minlength: "Destination must be between 2 and 50 characters",
+            },
+            detailsEdit: {
+                required: "Details value is required",
+                maxlength: "Details must be between 2 and 50 characters",
+                minlength: "Details must be between 2 and 50 characters",
+            },
+        },
+        errorLabelContainer: "#editModal .modal-alert-danger",
+        errorPlacement: function (error, element) {
+            error.appendTo("#editModal .modal-alert-danger");
+        },
+        showErrors: function (errorMan, errorList) {
+            if (this.numberOfInvalids() > 0) {
+                $("#editModal .modal-alert-danger").removeClass("hide").addClass("show");
+            } else {
+                $("#editModal .modal-alert-danger").removeClass("show").addClass("hide").empty();
+                $("#editModal input.error").removeClass("error");
+            }
+            this.defaultShowErrors();
+        },
+        submitHandler: function () {
+            doEditTour(tour);
+        }
+    })
+
+    function longToDate(date) {
+        const today = new Date(date);
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1;
+        let dd = today.getDate();
+
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+        return yyyy + '-' + mm + '-' + dd;
+    }
+
 </script>
 
 </body>

@@ -19,8 +19,8 @@ public class TourController {
     @GetMapping()
     public ModelAndView showList() {
         ModelAndView modelAndView = new ModelAndView("/tours/list");
-        List<Tour> tours= tourService.findAllActive();
-        modelAndView.addObject("tours",tours);
+        List<Tour> tours = tourService.findAllActive();
+        modelAndView.addObject("tours", tours);
         return modelAndView;
     }
 }

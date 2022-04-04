@@ -2,23 +2,34 @@ package com.cg.controller.api;
 
 import com.cg.model.ImageTour;
 import com.cg.model.Tour;
+import com.cg.model.dto.TourDTO;
 import com.cg.model.form.TourForm;
 import com.cg.service.ImageTourService;
 import com.cg.service.TourService;
+import com.cg.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/tours")
 public class TourRestController {
 
+    @Autowired
+    AppUtils appUtils;
 
     @Value("${file-upload}")
     private String fileUpload;
@@ -39,46 +50,51 @@ public class TourRestController {
         }
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> createAdmin(@RequestBody Tour tour) throws IOException {
-
-        tourService.save(tour);
-
-        return new ResponseEntity<>(tour, HttpStatus.OK);
+//    @GetMapping
+//    public ResponseEntity<?> getAllTour(@PageableDefault(value = 5) Pageable pageable) {
+//        Page<Tour> tourPage = tourService.findAll(pageable);
+//        List<Tour> tourList = tourPage.getContent();
+//        return new ResponseEntity<>(tourList, HttpStatus.OK);
+//    }
+    @GetMapping
+    public ResponseEntity<?> getAllTour() {
+        List<Tour> list = tourService.findAllActive();
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
+//    @PostMapping("/create")
+//    public ResponseEntity<?> createAdmin(@RequestBody TourDTO tourDTO) {
+//
+//        tourService.save(tourDTO.toTour());
+//        return new ResponseEntity<>(tourDTO.toTour(), HttpStatus.OK);
+//    }
 
 
     @PostMapping("/save")
-    public ResponseEntity<Object> saveTour(TourForm tourForm)
-            throws IOException {
-        Tour tour = new Tour(0L, tourForm.getName(), tourForm.getStartDay(), tourForm.getEndDay(), tourForm.getDeparture(), tourForm.getDestination(), tourForm.getPrice(), tourForm.getDetails(), false);
-        tourService.save(tour);
-
-        MultipartFile file = tourForm.getAvatar();
-        String fileName = file.getOriginalFilename();
-        Tour tourNew = tourService.getTourAddNew();
-        ImageTour imageTour = new ImageTour(0L, fileName, tourNew);
-        imageTourService.save(imageTour);
-        // Save file on system
-        if (!file.getOriginalFilename().isEmpty()) {
-            BufferedOutputStream outputStream = new BufferedOutputStream(
-                    new FileOutputStream(
-                            new File(fileUpload, file.getOriginalFilename())));
-            outputStream.write(file.getBytes());
-            outputStream.flush();
-            outputStream.close();
-        } else {
-            return new ResponseEntity<>("Invalid file.", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> saveTour(@Validated TourForm tourForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return appUtils.mapErrorToResponse(bindingResult);
         }
-        return new ResponseEntity<>("Tour Add Successfully.", HttpStatus.OK);
+        TourDTO tourDTO = new TourDTO(0L, tourForm.getName(), tourForm.getStartDay(), tourForm.getEndDay(), tourForm.getDeparture(), tourForm.getDestination(), tourForm.getPrice(), tourForm.getDetails());
+        MultipartFile file = tourForm.getImage();
+
+        try {
+            Tour tour = tourService.doTour(tourDTO.toTour(), file);
+            return new ResponseEntity<>(tour, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Tour Add Error.", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id,@RequestBody Tour tour) {
+    public ResponseEntity<?> updateTour(@PathVariable Long id, @Validated @RequestBody TourDTO tourDTO, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return appUtils.mapErrorToResponse(bindingResult);
+        }
         Optional<Tour> tourCheck = tourService.findById(id);
         if (tourCheck.isPresent()) {
-            tourService.save(tour);
-            return new ResponseEntity<>(tour, HttpStatus.OK);
+            Tour tourUpdated = tourService.save(tourDTO.toTour());
+            return new ResponseEntity<>(tourUpdated.toTourDTO(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Error for get customer", HttpStatus.NO_CONTENT);
         }

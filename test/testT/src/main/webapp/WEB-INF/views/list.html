@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/resources/fontawesome5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/resources/css/style.css">
+</head>
+<body>
+<table border="1" class="table table-hover" id="tbCustomer">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Thành phố</th>
+        <th>Quốc gia</th>
+        <th colspan="2">Action</th>
+    </tr>
+    <th:block th:each="item : ${cities}">
+        <td th:text="${item.id}"></td>
+        <td><a th:href="@{'/details/' + ${item.id}}" th:text="${item.cityName}"></a></td>
+        <td th:text="${item.nation}"></td>
+        <td>
+            <button type="button" class="btn btn-outline-secondary btn-edit"
+                    th:data-id="${item.id}">
+                <a>Edit</a>
+            </button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-outline-danger btn-delete"
+                    th:data-id="${item.id}">Delete
+            </button>
+        </td>
+    </th:block>
+    </thead>
+</table>
+<script src="/resources/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

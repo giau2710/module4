@@ -2,6 +2,7 @@ package com.cg.controller.api;
 
 import com.cg.model.User;
 
+import com.cg.model.dto.UserDTO;
 import com.cg.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,11 @@ public class AdminRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-        Optional<User> user = userService.findById(id);
-        if (user.isPresent()) {
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+
+
+        Optional<UserDTO> userDTO = userService.findUserDTOById(id);
+        if (userDTO.isPresent()) {
+            return new ResponseEntity<>(userDTO.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Error for get admin", HttpStatus.NO_CONTENT);
         }
@@ -39,9 +42,9 @@ public class AdminRestController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> doDelete(@PathVariable Long userId) {
-        Optional<User> user = userService.findById(userId);
-        if (user.isPresent()) {
-            userService.softDelete(user.get());
+        Optional<UserDTO> userDTO = userService.findUserDTOById(userId);
+        if (userDTO.isPresent()) {
+            userService.softDelete(userDTO.get().toUser());
             return new ResponseEntity<>("Delete admins successful", HttpStatus.OK);
         }
         return new ResponseEntity<>("Error for delete admins", HttpStatus.BAD_REQUEST);

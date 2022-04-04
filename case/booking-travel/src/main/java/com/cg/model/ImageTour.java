@@ -26,5 +26,4 @@ public class ImageTour {
     @JoinColumn(name = "tour_id",referencedColumnName = "id")
     private Tour tour;
 
-
 }

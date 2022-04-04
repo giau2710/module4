@@ -512,6 +512,10 @@
 <!--   Core JS Files   -->
 <th:block th:replace="/layout/scirptEnd :: scriptEnd"/>
 
+<script th:inline="javascript">
+    let message = [[${messageLoginSuccessful}]]
+    showSuccess(message);
+</script>
 </body>
 
 </html>

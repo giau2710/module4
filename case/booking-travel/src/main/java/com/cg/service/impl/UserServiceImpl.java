@@ -1,9 +1,12 @@
 package com.cg.service.impl;
 
 import com.cg.model.User;
+import com.cg.model.dto.UserDTO;
 import com.cg.repository.UserRepository;
 import com.cg.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,18 +53,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> fillAllActive() {
+    public List<User> findAllActive() {
         return userRepository.findAllByDeletedIsFalse();
     }
 
     @Override
-    public boolean existsByUsernameAndPassword(String username,String password) {
-        return userRepository.existsByUsernameAndPassword(username,password);
+    public List<UserDTO> findAllUserDTOByDeletedIsFalse() {
+        return userRepository.findAllUserDTOByDeletedIsFalse();
+    }
+
+    @Override
+    public Optional<UserDTO> findUserDTOById(Long id) {
+        return userRepository.findUserDTOById(id);
+    }
+
+    @Override
+    public boolean existsByUsernameAndPassword(String username, String password) {
+        return userRepository.existsByUsernameAndPassword(username, password);
     }
 
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
 

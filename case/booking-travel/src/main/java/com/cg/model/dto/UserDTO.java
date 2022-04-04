@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Column;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,14 +20,22 @@ import javax.persistence.Column;
 public class UserDTO {
 
     private Long id;
+
+    @Size(min = 2, max = 30)
+    @NotBlank
     private String fullName;
+    @Size(min = 2, max = 30)
+    @NotBlank
     private String username;
+    @Size(min = 6, max = 50)
+    @NotBlank
     private String password;
     private String phone;
     private String email;
     private String avatar;
+    private boolean activeStatus;
 
-    public User toUser(){
+    public User toUser() {
         return new User()
                 .setId(id)
                 .setFullName(fullName)
@@ -33,7 +43,7 @@ public class UserDTO {
                 .setPassword(password)
                 .setPhone(phone)
                 .setEmail(email)
-                .setAvatar(avatar);
+                .setAvatar(avatar)
+                .setActiveStatus(activeStatus);
     }
-
 }

@@ -10,32 +10,35 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <div class="modal-alert-danger hide">
+                    </div>
                     <form id="frmCreate" th:action="@{/admins/save}" th:object="${userForm}"
                           method="POST" novalidate="novalidate" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="fullNameCreate" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="fullNameCreate" th:field="*{fullName}">
+                                <input type="text" class="form-control" name="fullNameCreate" id="fullNameCreate" th:field="*{fullName}">
+<!--                                <td th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Name Error</td>-->
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="emailCreate" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="emailCreate" th:field="*{email}">
+                                <input type="email" class="form-control" name="emailCreate" id="emailCreate" th:field="*{email}">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="usernameCreate" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="usernameCreate" th:field="*{username}">
+                                <input type="text" class="form-control" name="usernameCreate" id="usernameCreate" th:field="*{username}">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="phoneCreate" class="form-label">Phone</label>
-                                <input type="tel" class="form-control" id="phoneCreate" th:field="*{phone}">
+                                <input type="tel" class="form-control" name="phoneCreate" id="phoneCreate" th:field="*{phone}">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="passwordCreate" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="passwordCreate" th:field="*{password}">
+                                <input type="password" class="form-control" name="passwordCreate" id="passwordCreate" th:field="*{password}">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label for="confirmPasswordCreate" class="form-label">Confirm Password</label>
@@ -45,8 +48,8 @@
                         <div class="row">
                             <div class="col-md-6 mb-3 preview">
                                 <label for="avatarCreate" class="form-label">Avatar</label>
-                                <input  type="file" class="form-control view-avatar" name="avatarCreate"
-                                        id="avatarCreate" th:field="*{avatar}">
+                                <input type="file" class="form-control view-avatar" name="avatarCreate"
+                                       id="avatarCreate" th:field="*{avatar}">
                                 <img id="img-preview" class="img-preview"
                                      src="/resources/image/22-223863_no-avatar-png-circle-transparent-png.jpg"/>
                             </div>

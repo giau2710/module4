@@ -41,7 +41,7 @@ public class User {
         return new UserDTO()
                 .setId(id)
                 .setFullName(fullName)
-                .setFullName(username)
+                .setUsername(username)
                 .setPassword(password)
                 .setPhone(phone)
                 .setEmail(email)

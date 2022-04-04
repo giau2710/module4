@@ -19,17 +19,13 @@
     <!-- Navbar -->
     <th:block th:replace="/layout/navbar :: navbar"/>
     <!-- End Navbar -->
-    <script th:inline="javascript">
-        let message = [[${message}]]
-        if (message != null) {
-            showSuccess(message);
-        }
-    </script>
+
     <!--    Create Modal-->
     <th:block th:include="/users/admins/modal_create :: modal_create"/>
     <!--    Edit Modal-->
     <th:block th:include="/users/admins/modal_update :: modal_update"/>
     <!--List-->
+    <!--    <div th:text="${errors}"> </div>-->
     <div class="container-fluid py-4">
         <button type="button" id="btn-create" class="btn btn-outline-primary mb-3 btn-create">Create Admin</button>
         <div class="row">
@@ -52,9 +48,6 @@
                                     </th>
                                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                                         Username
-                                    </th>
-                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                                        Password
                                     </th>
 
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -95,11 +88,6 @@
                                             <span class="text-secondary text-xs font-weight-bold"
                                                   th:text="${item.username}"></span>
                                         </td>
-                                        <td class="align-middle ">
-                                            <span type="password" class="text-secondary text-xs font-weight-bold"
-                                                  th:text="${item.password}"></span>
-
-                                        </td>
                                         <td th:if="${item.activeStatus}==true" class="align-middle text-center text-sm">
                                             <span class="badge badge-sm bg-gradient-success">Online</span>
                                         </td>
@@ -121,7 +109,13 @@
 
                                     </tr>
                                 </th:block>
-
+<!--                                <div>-->
+<!--                                    <a th:href="@{'/admins'(page=${users.number - 1})}" th:if="${users.hasPrevious()}">Previous</a>-->
+<!--                                    <span th:text="${users.number + 1}"></span>/<span-->
+<!--                                        th:text="${users.totalPages}"></span>-->
+<!--                                    <a th:href="@{'/admins'(page=${users.number + 1})}"-->
+<!--                                       th:if="${users.hasNext()}">Next</a>-->
+<!--                                </div>-->
                                 </tbody>
                             </table>
                         </div>
@@ -145,7 +139,15 @@
     })
 </script>
 
+
 <script>
+    let page = {
+        url: {
+            getAdminById: App.BASE_URL_ADMIN,
+            doDelete: App.BASE_URL_ADMIN
+        }
+    }
+
     let user = new User();
 
 
@@ -165,7 +167,7 @@
     function showEditModal() {
         $(".btn-edit").on("click", function () {
             let id = $(this).data("id");
-            getCustomerById(id).then(function () {
+            getAdminById(id).then(function () {
                 $("#editModal").modal("show");
                 $("#idEdit").val(user.id);
                 $("#fullNameEdit").val(user.fullName);
@@ -204,39 +206,98 @@
     function doDelete(userId) {
         $.ajax({
             type: "DELETE",
-            url: "http://localhost:8080/api/admins/" + userId,
+            url: page.url.doDelete + "/" + userId,
         }).done(function (data) {
             $("#tr_" + userId).remove();
             showSuccess(data);
 
             // getAllCustomer();
         }).fail(function () {
-            showError('User\'s information is invalid');
+            showError('Admin \'s information is invalid');
 
         })
 
     }
 
-    function getCustomerById(userId) {
+    function getAdminById(userId) {
         return $.ajax({
             type: "GET",
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             },
-            url: "http://localhost:8080/api/admins/" + userId,
+            url: page.url.getAdminById + "/" + userId,
         }).done(function (data) {
             user = data;
         }).fail(function () {
-            showError("Get User Fail")
+            showError("Get Admin Fail")
         })
     }
 
+    $("#frmCreate").validate({
+        rules: {
+            fullNameCreate: {
+                required: "Name value is required",
+                maxlength: "Name must be between 2 and 50 characters",
+                minlength: "Name must be between 2 and 50 characters",
+            }
+        },
+        messages: {
+            fullNameCreate: {
+                required: "Name value is required",
+                maxlength: "Name must be between 2 and 50 characters",
+                minlength: "Name must be between 2 and 50 characters",
+            }
+        },
+        // errorLabelContainer: "#depositModal .modal-alert-danger",
+        // errorPlacement: function (error, element) {
+        //     error.appendTo("#depositHodal .modal-alert-danger");
+        // },
+        // showErrors: function (errorMan, errorList) {
+        //     if (this.numberOfInvalids() > 0) {
+        //         $("#depositModal .modal-alert-danger").removeClass("hide").addClass("show");
+        //     } else {
+        //         $("#depositModal .modal-alert-danger").removeClass("show").addClass("hide").empty();
+        //         $("#frmDeposit input.error").removeClass("error");
+        //     }
+        //     this.defaultShowErrors();
+        // },
+        // submitHandler: function () {
+        //     doDeposit(deposit);
+        // }
+    })
 
     showCreateModal();
     showEditModal();
     showDeleteModal();
 
+
+</script>
+
+<script th:inline="javascript">
+    let message = [[${message}]]
+    if (message != null) {
+        showSuccess(message);
+    }
+    let errors = [[${errors}]]
+    if (errors != null) {
+        // let str = ``;
+        // if (errors.responseJSON) {
+        //     if (errors.responseJSON.message) {
+        //         str += `<label id="message-error" class="error" for="message">${errors.responseJSON.message}</lable><br>`;
+        //     } else {
+        //         $.each(errors.responseJSON, function (key, value) {
+        //             str += `<label id="${key}Create-error" class="error" for="${key}Create">${value}</lable><br>`;
+        //             $("#" + key + "Create").addClass("error");
+        //         });
+        //     }
+        // } else {
+        //     str += `<label id= "message-error" class= "error" for= "message">${App.ERROR_400}</label>`;
+        // }
+        // $("#createModal .modal-alert-danger").removeClass('hide').addClass('show').html(str);
+        // $("#createModal").modal("show");
+        showError("Add admin error")
+    }
 </script>
 </body>
 
