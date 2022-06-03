@@ -1,10 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Transfer History</title>
+    <link rel="stylesheet" href="/resources/css/bootstrap.min.css">
+    <script src="/resources/js/jquery-3.6.0.js"></script>
+    <script src="/resources/js/jquery.validate.js"></script>
+    <script src="/resources/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-$END$
+<div class="container">
+    <div class="table-title">
+        <div class="row">
+            <div class="col-sm-5">
+                <h1>List of customers</h1>
+            </div>
+            <div>
+                <button type="button" id="btnTransferHistory" class="btn btn-primary mb-3"><a style="color: #FFFFFF"
+                                                                                              href="/customers">List of
+                    Customer</a></button>
+            </div>
+        </div>
+    </div>
+    <table class="table table-hover" id="tbTransfer">
+        <thead class="table-head-ss">
+        <tr class="table-head-ss">
+            <th>#</th>
+            <th>Sender ID</th>
+            <th>Sender Name</th>
+            <th>Recipient ID</th>
+            <th>Recipient Name</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Transfer Amount ($)</th>
+            <th>Fees(%)</th>
+            <th>Fees Amount ($)</th>
+            <th>Total Amount ($)</th>
+            <th th:text="${totalFeesAmount}"></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!--        <th:block th:each="item : ${transfers}">-->
+
+        <!--            <tr>-->
+        <!--                                <td th:text="${item.id}"></td>-->
+        <!--                                <td th:text="${item.sender.id}"></td>-->
+        <!--                                <td th:text="${item.sender.fullName}"></td>-->
+        <!--                                <td th:text="${item.recipient.id}"></td>-->
+        <!--                                <td th:text="${item.recipient.fullName}"></td>-->
+        <!--                                <td th:text="${item.id}"></td>-->
+        <!--                                <td th:text="${item.id}"></td>-->
+        <!--                                <td th:text="${item.transferAmount}"></td>-->
+        <!--                                <td th:text="${item.fees}"></td>-->
+        <!--                                <td th:text="${item.feesAmount}"></td>-->
+        <!--                                <td th:text="${item.transactionAmount}"></td>-->
+        <!--            </tr>-->
+        <!--        </th:block>-->
+        </tbody>
+        <tfoot>
+        <!--        <tr>-->
+        <!--            <td colspan="8"></td>-->
+        <!--            <td><h2>Total Fees Amount:</h2></td>-->
+        <!--            <td><h2>${total}</h2></td>-->
+        <!--            <td></td>-->
+        <!--        </tr>-->
+        </tfoot>
+    </table>
+    <script src="/resources/js/sweetalert2@11.js"></script>
+    <script src="/resources/js/app.js"></script>
+    <!--    <script th:inline="javascript">-->
+    <!--        let total=[[${totalFeesAmount}]]-->
+    <!--        console.log(total);-->
+    <!--    </script>-->
+    <script th:inline="javascript">
+        // let sender = new Sender();
+        // let recipient = new Recipient();
+        let transfer = new TransferDTO();
+        let totalFeesAmount = [[${totalFeesAmount}]]
+        let total=0;
+        // console.log(total);
+        $.ajax({
+            type: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            url: "http://localhost:8080/api/transfers"
+        }).done(function (data) {
+            // console.log(data);
+            data.forEach(item => {
+                // sender = item.sender;
+                // recipient = item.recipient;
+                transfer = item;
+                total += transfer.feesAmount;
+                let str = `
+                <tr>
+                    <td>${transfer.id}</td>
+                    <td>${transfer.senderId}</td>
+                    <td>${transfer.senderName}</td>
+                    <td>${transfer.recipientId}</td>
+                    <td>${transfer.recipientName}</td>
+                    <td>${transfer.id}</td>
+                    <td>${transfer.id}</td>
+                    <td>${transfer.transferAmount}</td>
+                    <td>${transfer.fees}</td>
+                    <td>${transfer.feesAmount}</td>
+                    <td>${transfer.id}</td>
+                </tr>
+
+                `;
+                $("#tbTransfer tbody").prepend(str)
+            })
+
+            let tfoot = `
+                <tfoot>
+                    <tr>
+                        <td colspan="8"></td>
+                        <td>Total Fees Amount:</td>
+                        <td >${total}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="8"></td>
+                        <td>Total Fees Amount 2:</td>
+                        <td >${totalFeesAmount}</td>
+                    </tr>
+                </tfoot>`;
+            $("#tbTransfer tfoot").prepend(tfoot)
+
+        }).fail(function () {
+            showError('Error')
+        })
+    </script>
+
+</div>
 </body>
 </html>

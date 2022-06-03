@@ -1,10 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div th:block th:fragment="modal_withdraw">
+    <div class="modal fade" id="withdrawModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal withdraw</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="frmWithdraw">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="customerIdWd" class="form-label">Customer ID</label>
+                                <input type="text" class="form-control" id="customerIdWd" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="fullNameWd" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullNameWd" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="balanceWd" class="form-label">Current balance ($)</label>
+                                <input type="text" class="form-control" id="balanceWd" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="transactionAmountWd" class="form-label">Transaction Amount ($)</label>
+                                <input type="text" class="form-control" name="transactionAmountWd"
+                                       id="transactionAmountWd">
+                            </div>
+                        </div>
+                        <!-- <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="text" class="form-control" name="password" id="password">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                <input type="text" class="form-control" name="confirmPassword" id="confirmPassword">
+                            </div>
+                        </div> -->
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" id="btnWithdraw" class="btn btn-outline-warning">Withdraw</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

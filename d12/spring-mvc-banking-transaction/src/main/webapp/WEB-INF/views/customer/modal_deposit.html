@@ -1,10 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<div th:block th:fragment="modal_deposit">
+    <div class="modal fade" id="depositModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal deposit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-alert-danger hide">
+<!--                        <label id="transactionAmountDep-error" class="error" for="transactionAmountDep">-->
+<!--                            Vui lòng hoàn thiện thông tin này-->
+<!--                        </label>-->
+                    </div>
+                    <form id="frmDeposit">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="customerIdDep" class="form-label">Customer ID</label>
+                                <input type="text" class="form-control" id="customerIdDep" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="fullNameDep" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullNameDep" readonly>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="balanceDep" class="form-label">Current balance ($)</label>
+                                <input type="text" class="form-control" id="balanceDep" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="transactionAmountDep" class="form-label">Transaction Amount ($)</label>
+                                <input type="text" class="form-control" id="transactionAmountDep" name="transactionAmountDep">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btnDeposit" class="btn btn-outline-success">Deposit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

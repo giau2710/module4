@@ -4,11 +4,13 @@ import com.cg.model.Transfer;
 import com.cg.model.dto.TransferDTO;
 import com.cg.repository.TransferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-
-public class TransferImpl implements TransferService{
+@Service
+public class TransferServiceImpl implements TransferService{
     @Autowired
     TransferRepository transferRepository;
 
@@ -44,6 +46,11 @@ public class TransferImpl implements TransferService{
 
     @Override
     public List<TransferDTO> fillAllTransferDTO() {
-        return null;
+        return transferRepository.fillAllTransferDTO();
+    }
+
+    @Override
+    public BigDecimal totalFessAmount() {
+        return transferRepository.totalFessAmount();
     }
 }
